@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import InputField from '@/components/InputField'
 import FetchButton from '@/components/FetchButton'
 import DidDoc from '@/components/DidDoc'
@@ -109,6 +110,7 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4 sm:p-10 flex flex-col items-center">
+      <Analytics />
       <h1 className="text-3xl sm:text-4xl font-mono font-bold mb-6 sm:mb-8">PDS Explorer</h1>
       <div className="bg-gray-800 shadow-md rounded-lg p-6 sm:p-8 w-full max-w-4xl space-y-4 sm:space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
