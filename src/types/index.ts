@@ -12,4 +12,5 @@ export interface RepoDataResponse {
     records: object[]
     cursor?: string
   }
+  error?: string
 }

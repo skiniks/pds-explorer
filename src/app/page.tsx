@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Analytics } from '@vercel/analytics/react'
+import { FaGithub } from 'react-icons/fa'
 import InputField from '@/components/InputField'
 import FetchButton from '@/components/FetchButton'
 import DidDoc from '@/components/DidDoc'
@@ -9,18 +10,6 @@ import Collection from '@/components/Collection'
 import CollectionSelector from '@/components/CollectionSelector'
 import { fetchCollectionData, fetchCollections, fetchDidDoc, fetchDidFromHandle } from '@/lib/atproto'
 import type { DidDocResponse, RepoDataResponse, Service } from '@/types'
-
-function GitHubIcon() {
-  return (
-    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fillRule="evenodd"
-        d="M12 0C5.373 0 0 5.373 0 12c0 5.303 3.438 9.8 8.207 11.387.6.111.793-.261.793-.577v-2.241c-3.338.726-4.033-1.609-4.033-1.609-.546-1.387-1.333-1.757-1.333-1.757-1.089-.746.083-.73.083-.73 1.204.085 1.838 1.238 1.838 1.238 1.07 1.835 2.807 1.306 3.492.998.108-.775.418-1.306.76-1.606-2.665-.303-5.467-1.332-5.467-5.93 0-1.31.467-2.381 1.235-3.221-.123-.303-.535-1.523.118-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.046.138 3.003.404 2.292-1.552 3.299-1.23 3.299-1.23.653 1.653.241 2.873.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.61-2.807 5.625-5.48 5.922.43.372.814 1.102.814 2.222v3.293c0 .319.192.694.8.576C20.565 21.796 24 17.299 24 12 24 5.373 18.627 0 12 0z"
-        clipRule="evenodd"
-      />
-    </svg>
-  )
-}
 
 function Home() {
   const [identifier, setIdentifier] = useState<string>('')
@@ -33,6 +22,7 @@ function Home() {
   const [showDidDoc, setShowDidDoc] = useState<boolean>(true)
   const [cursor, setCursor] = useState<string | undefined>(undefined)
   const [fetching, setFetching] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
 
   const resetState = () => {
     setIdentifier('')
@@ -45,6 +35,7 @@ function Home() {
     setFetching(false)
     setLoading(false)
     setShowDidDoc(true)
+    setError(null)
   }
 
   const resolveIdentifier = async () => {
@@ -62,7 +53,10 @@ function Home() {
       }
     }
     catch (error) {
-      console.error('Error resolving identifier to DID:', error)
+      if (error instanceof Error) {
+        setError(error.message)
+        console.error('Error resolving identifier to DID:', error)
+      }
     }
     finally {
       setLoading(false)
@@ -80,7 +74,10 @@ function Home() {
       }
     }
     catch (error) {
-      console.error('Error fetching collections:', error)
+      if (error instanceof Error) {
+        setError(error.message)
+        console.error('Error fetching collections:', error)
+      }
     }
   }
 
@@ -102,7 +99,10 @@ function Home() {
       }
     }
     catch (error) {
-      console.error('Error fetching repo data:', error)
+      if (error instanceof Error) {
+        setError(error.message)
+        console.error('Error fetching repo data:', error)
+      }
     }
     finally {
       setFetching(false)
@@ -125,7 +125,7 @@ function Home() {
       <Analytics />
       <div className="w-full flex justify-end mb-4">
         <a href="https://github.com/skiniks/pds-explorer" target="_blank" rel="noopener noreferrer" className="text-gray-100 hover:text-gray-300 transition">
-          <GitHubIcon />
+          <FaGithub size={32} />
         </a>
       </div>
       <h1 className="text-3xl sm:text-4xl font-mono font-bold mb-6 sm:mb-8">PDS Explorer</h1>
@@ -152,6 +152,7 @@ function Home() {
         {repoData.length > 0 && <Collection collectionData={repoData} cursor={cursor} fetching={fetching} loadMore={loadMore} />}
       </div>
       {data && <DidDoc data={data} show={showDidDoc} onToggle={() => setShowDidDoc(!showDidDoc)} />}
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
   )
 }
