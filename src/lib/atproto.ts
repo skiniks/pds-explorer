@@ -8,12 +8,17 @@ export async function fetchDidFromWebHandle(handle: string): Promise<string> {
     const url = `https://${handle}/.well-known/did.json`
     const proxyUrl = `${proxyApiRoute}${encodeURIComponent(url)}`
     const res = await fetch(proxyUrl)
-    const didDoc = await res.json()
-    if (didDoc.id.startsWith('did:web:')) {
-      return didDoc.id
+    if (res.ok) {
+      const didDoc = await res.json()
+      if (didDoc.id.startsWith('did:web:')) {
+        return didDoc.id
+      }
+      else {
+        throw new Error('Not a did:web handle')
+      }
     }
     else {
-      throw new Error('Not a did:web handle')
+      throw new Error('Failed to fetch did.json')
     }
   }
   catch (error) {
@@ -27,6 +32,9 @@ export async function fetchDidFromHandle(handle: string): Promise<string> {
   }
   catch (error) {
     const res = await fetch(`https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${handle}`)
+    if (!res.ok) {
+      throw new Error('Failed to resolve handle to DID')
+    }
     const result = await res.json()
     return result.did
   }
@@ -36,6 +44,9 @@ export async function fetchDidDoc(resolvedDid: string): Promise<any> {
   try {
     if (resolvedDid.startsWith('did:plc:')) {
       const res = await fetch(`https://plc.directory/${resolvedDid}`)
+      if (!res.ok) {
+        throw new Error('Failed to fetch PLC DID document')
+      }
       return await res.json()
     }
     else if (resolvedDid.startsWith('did:web:')) {
@@ -43,6 +54,9 @@ export async function fetchDidDoc(resolvedDid: string): Promise<any> {
       const url = `https://${domain}/.well-known/did.json`
       const proxyUrl = `${proxyApiRoute}${encodeURIComponent(url)}`
       const res = await fetch(proxyUrl)
+      if (!res.ok) {
+        throw new Error('Failed to fetch did:web DID document')
+      }
       return await res.json()
     }
     else {

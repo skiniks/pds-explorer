@@ -26,7 +26,8 @@ export async function GET(req: NextRequest) {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     })
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error in proxy route:', error as Error)
     return new NextResponse(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
