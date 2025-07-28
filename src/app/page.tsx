@@ -1,15 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import type { DidDocResponse, RepoDataResponse, Service } from '@/types'
 import { Analytics } from '@vercel/analytics/react'
+import { useState } from 'react'
 import { FaGithub } from 'react-icons/fa'
-import InputField from '@/components/InputField'
-import FetchButton from '@/components/FetchButton'
-import DidDoc from '@/components/DidDoc'
 import Collection from '@/components/Collection'
 import CollectionSelector from '@/components/CollectionSelector'
+import DidDoc from '@/components/DidDoc'
+import FetchButton from '@/components/FetchButton'
+import InputField from '@/components/InputField'
 import { fetchCollectionData, fetchCollections, fetchDidDoc, fetchDidFromHandle } from '@/lib/atproto'
-import type { DidDocResponse, RepoDataResponse, Service } from '@/types'
 
 function Home() {
   const [identifier, setIdentifier] = useState<string>('')

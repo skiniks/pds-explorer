@@ -1,5 +1,5 @@
-import CodeHighlighter from './CodeHighlighter'
 import type { DidDocResponse } from '@/types'
+import CodeHighlighter from './CodeHighlighter'
 
 interface DidDocProps {
   data: DidDocResponse

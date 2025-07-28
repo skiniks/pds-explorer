@@ -1,5 +1,5 @@
-import { AtpAgent } from '@atproto/api'
 import type { RepoDataResponse } from '@/types'
+import { AtpAgent } from '@atproto/api'
 
 const proxyApiRoute = '/api/proxy?url='
 
@@ -22,7 +22,7 @@ export async function fetchDidFromWebHandle(handle: string): Promise<string> {
     }
   }
   catch (error) {
-    throw new Error('Failed to resolve did:web handle')
+    throw new Error(`Failed to resolve did:web handle: ${(error as Error).message}`)
   }
 }
 
@@ -30,7 +30,7 @@ export async function fetchDidFromHandle(handle: string): Promise<string> {
   try {
     return await fetchDidFromWebHandle(handle)
   }
-  catch (error) {
+  catch {
     const res = await fetch(`https://bsky.social/xrpc/com.atproto.identity.resolveHandle?handle=${handle}`)
     if (!res.ok) {
       throw new Error('Failed to resolve handle to DID')
