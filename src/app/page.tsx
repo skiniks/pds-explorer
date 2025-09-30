@@ -1,7 +1,6 @@
 'use client'
 
 import type { DidDocResponse, RepoDataResponse, Service } from '@/types'
-import { Analytics } from '@vercel/analytics/react'
 import { useState } from 'react'
 import { FaGithub } from 'react-icons/fa'
 import Collection from '@/components/Collection'
@@ -122,7 +121,6 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4 sm:p-10 flex flex-col items-center">
-      <Analytics />
       <div className="w-full flex justify-end mb-4">
         <a href="https://github.com/skiniks/pds-explorer" target="_blank" rel="noopener noreferrer" className="text-gray-100 hover:text-gray-300 transition">
           <FaGithub size={32} />
